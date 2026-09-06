@@ -20,7 +20,7 @@ import RiderProfile from './pages/admin/RiderProfile';
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <Routes>
         {/* Public */}
         <Route path="/" element={<Home />} />
