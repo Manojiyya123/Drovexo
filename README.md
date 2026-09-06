@@ -1,6 +1,38 @@
 # Drovexo
 
+**Live Demo**: [https://drovexo-kmk.vercel.app/](https://drovexo-kmk.vercel.app/)
+
 Drovexo is a modern web-based platform designed for comprehensive logistics and rider fleet management. It features a robust Admin Dashboard equipped with operational tools for real-time tracking, stateful rider management (including biometric and status vetting), financial reporting.
+
+## Project Structure & Pages
+
+The application is structured into four distinct user flows:
+
+### Public Pages
+- **Home (`/`)**: Landing page introducing Drovexo services.
+- **Login (`/login`)**: Authentication portal for all user roles.
+- **Customer Signup (`/signup`)**: Registration page for new customers.
+- **Rider Signup (`/rider-signup`)**: Specialized registration pipeline for prospective riders.
+
+### Customer Portal
+- **Dashboard (`/customer`)**: Overview of the customer's active and past orders.
+- **Create Order (`/customer/order/new`)**: Interface to place new delivery and logistics requests.
+- **Order History (`/customer/orders`)**: Detailed history of all past deliveries.
+
+### Rider Portal
+- **Dashboard (`/rider`)**: The primary interface for riders to manage active deliveries.
+- **My Drops (`/rider/drops`)**: View a history of completed drop-offs.
+- **Earnings (`/rider/earnings`)**: Financial overview for monitoring payouts and rider earnings.
+
+### Admin Dashboard (Operational Suite)
+- **Dashboard (`/admin`)**: High-level operational oversight and key metrics.
+- **Customers (`/admin/customers`)**: Interface to manage customer profiles.
+- **Riders (`/admin/riders`)**: State management and vetting interface for the rider fleet.
+- **Orders (`/admin/orders`)**: Centralized dispatch and management of all logistics orders.
+- **Revenue Report (`/admin/report`)**: Financial reporting with interactive data visualization.
+- **Specific Rider Profiles (`/admin/rider-profile/:name`)**: Detailed performance metrics for individual riders.
+- **Rider Drop History (`/admin/rider-drops/:name`)**: Deep dive into a specific rider's drop logs.
+- **Customer Parcel History (`/admin/customer-parcels/:name`)**: Review all active and past parcels for specific customers.
 
 ## Key Features
 
@@ -31,7 +63,7 @@ To run the project locally, ensure you have Node.js installed, then follow these
 
 1. Clone the repository:
    ```bash
-   git clone <your-github-repo-url>
+   git clone https://github.com/Manojiyya123/Drovexo.git
    cd drovexo
    ```
 
@@ -46,11 +78,6 @@ To run the project locally, ensure you have Node.js installed, then follow these
 4. Start the development server:
    ```bash
    npm run dev
-   ```
-
-5. Build for production:
-   ```bash
-   npm run build
    ```
 
 ## License
