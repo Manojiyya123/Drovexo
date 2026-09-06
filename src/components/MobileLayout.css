@@ -1,0 +1,256 @@
+/* ── Mobile Layout ── */
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+.ml-root {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    min-height: 100dvh;
+    /* dynamic viewport for mobile browsers */
+    background: var(--bg-base);
+    max-width: 480px;
+    /* cap width — feels native on tablet too */
+    margin: 0 auto;
+    position: relative;
+}
+
+/* TOP HEADER */
+.ml-header {
+    position: sticky;
+    top: 0;
+    z-index: 60;
+    background: rgba(10, 11, 15, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 16px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.ml-header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.ml-header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ml-logo {
+    font-weight: 800;
+    font-size: 16px;
+    letter-spacing: -0.3px;
+}
+
+.ml-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+
+.ml-logout {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.ml-logout:hover,
+.ml-logout:active {
+    color: var(--red);
+    border-color: rgba(239, 68, 68, 0.4);
+}
+
+/* PAGE TITLE */
+.ml-page-title {
+    padding: 20px 16px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.ml-page-title h1 {
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+/* BODY */
+.ml-body {
+    flex: 1;
+    padding: 0 16px 100px;
+    /* 100px bottom pad for nav bar */
+    overflow-y: auto;
+}
+
+/* BOTTOM NAV */
+.ml-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    background: rgba(18, 20, 26, 0.97);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 8px 0 env(safe-area-inset-bottom, 8px);
+    z-index: 60;
+}
+
+.ml-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    flex: 1;
+    padding: 6px 4px;
+    border: none;
+    background: none;
+    color: var(--text-muted);
+    transition: color 0.2s;
+    text-decoration: none;
+    min-height: 48px;
+    /* large tap target */
+    justify-content: center;
+}
+
+.ml-nav-item:active {
+    transform: scale(0.93);
+}
+
+.ml-nav-active {
+    color: var(--amber) !important;
+}
+
+.ml-nav-icon {
+    font-size: 20px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+}
+
+.ml-nav-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+/* ── Mobile-optimized card overrides ── */
+.ml-body .card {
+    border-radius: var(--radius-md);
+    padding: 16px;
+}
+
+.ml-body .stats-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.ml-body .stat-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 16px;
+}
+
+.ml-body .stat-card-value {
+    font-size: 1.3rem;
+}
+
+/* Order rows on mobile */
+.ml-body .order-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px;
+}
+
+.ml-body .order-meta {
+    width: 100%;
+    justify-content: space-between;
+}
+
+/* Full-width buttons on mobile */
+.ml-body .btn-primary {
+    width: 100%;
+    justify-content: center;
+    padding: 15px;
+    font-size: 15px;
+    border-radius: var(--radius-md);
+}
+
+.ml-body .new-order-btn {
+    margin-bottom: 20px;
+}
+
+/* Form inputs bigger on mobile */
+.ml-body .form-input {
+    padding: 14px 16px;
+    font-size: 16px;
+    /* prevents iOS zoom on focus */
+}
+
+/* Section spacing */
+.ml-body .section-block {
+    margin-bottom: 24px;
+}
+
+.ml-body .orders-list {
+    gap: 10px;
+}
+
+/* Earnings */
+.ml-body .earnings-summary {
+    padding: 20px;
+}
+
+.ml-body .earnings-total {
+    font-size: 2.2rem;
+}
+
+/* Price preview */
+.ml-body .price-preview {
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* Table: scroll horizontally on very small screens */
+.ml-body .table-wrap {
+    overflow-x: auto;
+}
+
+.ml-body .data-table {
+    min-width: 400px;
+    font-size: 13px;
+}
+
+.ml-body .data-table th,
+.ml-body .data-table td {
+    padding: 10px 12px;
+}
