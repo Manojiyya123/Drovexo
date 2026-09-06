@@ -115,18 +115,16 @@ export default function RevenueReport() {
                     </div>
                 </div>
 
-                {dateFilterType === 'range' && (
-                    <div style={{ display: 'flex', gap: '12px', flex: 2, minWidth: '280px' }}>
-                        <div className="form-group" style={{ flex: 1, margin: 0 }}>
-                            <label className="form-label" style={{ fontSize: '11px', textTransform: 'uppercase', color: 'var(--text-muted)' }}>Start Date</label>
-                            <input type="date" className="form-input" value={dateRange.start} onChange={e => setDateRange(prev => ({ ...prev, start: e.target.value }))} />
-                        </div>
-                        <div className="form-group" style={{ flex: 1, margin: 0 }}>
-                            <label className="form-label" style={{ fontSize: '11px', textTransform: 'uppercase', color: 'var(--text-muted)' }}>End Date</label>
-                            <input type="date" className="form-input" value={dateRange.end} onChange={e => setDateRange(prev => ({ ...prev, end: e.target.value }))} />
-                        </div>
+                <div style={{ display: 'flex', gap: '12px', flex: 2, minWidth: '280px', opacity: dateFilterType === 'range' ? 1 : 0.5 }}>
+                    <div className="form-group" style={{ flex: 1, margin: 0 }}>
+                        <label className="form-label" style={{ fontSize: '11px', textTransform: 'uppercase', color: 'var(--text-muted)' }}>Start Date</label>
+                        <input type="date" className="form-input" disabled={dateFilterType !== 'range'} value={dateRange.start} onChange={e => setDateRange(prev => ({ ...prev, start: e.target.value }))} />
                     </div>
-                )}
+                    <div className="form-group" style={{ flex: 1, margin: 0 }}>
+                        <label className="form-label" style={{ fontSize: '11px', textTransform: 'uppercase', color: 'var(--text-muted)' }}>End Date</label>
+                        <input type="date" className="form-input" disabled={dateFilterType !== 'range'} value={dateRange.end} onChange={e => setDateRange(prev => ({ ...prev, end: e.target.value }))} />
+                    </div>
+                </div>
             </div>
 
             <div className="section-block">

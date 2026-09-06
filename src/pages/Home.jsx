@@ -97,25 +97,22 @@ export default function Home() {
                         ))}
                     </div>
 
-                    <div className="hero-kural animate-fade-up" style={{ animationDelay: '0.5s', marginTop: '64px', maxWidth: '600px', margin: '64px auto 0', padding: '24px', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '12px', borderLeft: '4px solid var(--amber)', textAlign: 'left', backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', gap: '24px', position: 'relative', overflow: 'hidden' }}>
+                    <div className="hero-kural animate-fade-up" style={{ animationDelay: '0.5s' }}>
 
                         <div style={{ flex: 1, position: 'relative', zIndex: 2 }}>
-                            <p style={{ fontStyle: 'italic', color: 'var(--text-primary)', marginBottom: '12px', fontSize: '16px', lineHeight: '1.6' }}>
+                            <p style={{ fontStyle: 'italic', color: 'var(--amber)', marginBottom: '12px', fontSize: '16px', lineHeight: '1.6' }}>
                                 "வினைக்குரிமை நாடிய பின்றை அவனை<br />
                                 அதற்குரிய னாகச் செயல்."
                             </p>
-                            <p style={{ fontSize: '13px', color: 'var(--amber)', fontWeight: 600, letterSpacing: '0.5px' }}>
-                                ~குறள் 517<br />
+                            <p style={{ fontSize: '13.5px', color: '#ffffff', fontWeight: 600, letterSpacing: '0.5px', textAlign: 'left' }}>
                                 “Think before you act; once you act, move forward.”
+                            </p>
+                            <p style={{ fontSize: '14px', color: 'var(--amber)', fontWeight: 700, fontStyle: 'italic', textAlign: 'right', marginTop: '4px' }}>
+                                ~குறள் 517
                             </p>
                         </div>
 
-                        {/* Local Asset will be mounted here in the next step */}
-                        <img
-                            src="/thiruvalluvar.png"
-                            alt="Thiruvalluvar Sketch"
-                            style={{ width: '120px', height: '120px', objectFit: 'contain', opacity: 0.8, filter: 'drop-shadow(0 0 10px rgba(245, 158, 11, 0.2))', mixBlendMode: 'screen', position: 'relative', zIndex: 2 }}
-                        />
+
                     </div>
                 </div>
             </section>

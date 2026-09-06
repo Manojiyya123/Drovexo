@@ -1,9 +1,11 @@
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { LogOut, ChevronRight } from 'lucide-react';
+import { LogOut, ChevronRight, Menu, X } from 'lucide-react';
 import './Layout.css';
 
 export default function Layout({ children, role, title, subtitle }) {
     const navigate = useNavigate();
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const user = JSON.parse(localStorage.getItem('drovexo_user') || '{}');
 
     function logout() {
@@ -34,20 +36,30 @@ export default function Layout({ children, role, title, subtitle }) {
 
     return (
         <div className="layout">
+            {/* Mobile Overlay */}
+            {isMobileMenuOpen && (
+                <div className="sidebar-overlay" onClick={() => setIsMobileMenuOpen(false)}></div>
+            )}
+
             {/* Sidebar */}
-            <aside className="sidebar">
+            <aside className={`sidebar ${isMobileMenuOpen ? 'open' : ''}`}>
                 <div className="sidebar-header">
                     <Link to="/" className="sidebar-logo">
                         <span>⚡</span>
                         <span>Dro\/ex0</span>
                     </Link>
-                    <span className={`badge badge-${role === 'customer' ? 'customer' : role === 'rider' ? 'rider' : 'admin'}`}>
-                        {role}
-                    </span>
+                    <div className="sidebar-header-right">
+                        <span className={`badge badge-${role === 'customer' ? 'customer' : role === 'rider' ? 'rider' : 'admin'}`}>
+                            {role}
+                        </span>
+                        <button className="mobile-close-btn" onClick={() => setIsMobileMenuOpen(false)}>
+                            <X size={20} />
+                        </button>
+                    </div>
                 </div>
                 <nav className="sidebar-nav">
                     {(navLinks[role] || []).map(link => (
-                        <Link key={link.to} to={link.to} className="sidebar-link">
+                        <Link key={link.to} to={link.to} className="sidebar-link" onClick={() => setIsMobileMenuOpen(false)}>
                             <ChevronRight size={14} />
                             {link.label}
                         </Link>
@@ -72,9 +84,14 @@ export default function Layout({ children, role, title, subtitle }) {
             {/* Main */}
             <main className="main-content">
                 <header className="page-header">
-                    <div>
-                        <h1 className="page-title">{title}</h1>
-                        {subtitle && <p className="page-sub">{subtitle}</p>}
+                    <div className="header-left">
+                        <button className="mobile-menu-btn" onClick={() => setIsMobileMenuOpen(true)}>
+                            <Menu size={24} />
+                        </button>
+                        <div>
+                            <h1 className="page-title">{title}</h1>
+                            {subtitle && <p className="page-sub">{subtitle}</p>}
+                        </div>
                     </div>
                 </header>
                 <div className="page-body">

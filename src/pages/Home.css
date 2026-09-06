@@ -62,7 +62,7 @@
 /* HERO */
 .hero {
     position: relative;
-    padding: 160px 0 100px;
+    padding: 140px 0 60px;
     overflow: hidden;
 }
 
@@ -165,6 +165,32 @@
     animation: fadeUp 0.6s ease 0.3s forwards;
 }
 
+/* HERO KURAL */
+.hero-kural {
+    margin-top: 64px;
+    max-width: 600px;
+    margin: 64px auto 0;
+    padding: 24px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    border-left: 4px solid var(--amber);
+    text-align: left;
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    position: relative;
+    overflow: hidden;
+}
+
+@media (max-width: 640px) {
+    .hero-kural {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+}
+
 /* STATS */
 .hero-stats {
     display: flex;
@@ -212,7 +238,7 @@
 
 /* SECTIONS */
 .section {
-    padding: 100px 0;
+    padding: 80px 0;
 }
 
 .section-alt {

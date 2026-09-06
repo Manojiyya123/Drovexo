@@ -226,6 +226,20 @@ select.form-input {
   -webkit-appearance: none;
 }
 
+.select-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.select-icon {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--text-muted);
+}
+
 .form-input:focus {
   border-color: var(--amber);
   box-shadow: 0 0 0 3px var(--amber-glow);
