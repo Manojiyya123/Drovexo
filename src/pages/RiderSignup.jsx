@@ -26,24 +26,11 @@ export default function RiderSignup() {
         vehicleType: '2-wheeler',
         vehicleModel: '',
         vehicleNumber: '',
-        // Step 3: Documents (5) - Storing file names/status for demo
-        profilePic: null,
-        aadhaarDoc: null,
-        licenseDoc: null,
-        vehiclePic: null,
-        rcBookDoc: null,
     });
 
     function handleChange(e) {
         const { name, value } = e.target;
         setForm(f => ({ ...f, [name]: value }));
-    }
-
-    function handleFileChange(e) {
-        const { name, files } = e.target;
-        if (files.length > 0) {
-            setForm(f => ({ ...f, [name]: files[0].name }));
-        }
     }
 
     function nextStep() {
@@ -52,11 +39,6 @@ export default function RiderSignup() {
         if (step === 1) {
             if (!form.firstName || !form.lastName || !form.phone || !form.email || !form.password) {
                 setError('Please fill in all required personal details.');
-                return;
-            }
-        } else if (step === 2) {
-            if (!form.vehicleModel || !form.vehicleNumber) {
-                setError('Please fill in all vehicle details.');
                 return;
             }
         }
@@ -72,10 +54,11 @@ export default function RiderSignup() {
         e.preventDefault();
         setError('');
 
-        // Check files
-        if (!form.profilePic || !form.aadhaarDoc || !form.licenseDoc || !form.vehiclePic || !form.rcBookDoc) {
-            setError('Please upload all required documents.');
-            return;
+        if (step === 2) {
+            if (!form.vehicleModel || !form.vehicleNumber) {
+                setError('Please fill in all vehicle details before submitting.');
+                return;
+            }
         }
 
         setLoading(true);
@@ -106,13 +89,13 @@ export default function RiderSignup() {
 
                 <h1 className="auth-title">Rider Application</h1>
                 <div className="step-indicator">
-                    Step {step} of 3: {step === 1 ? 'Personal Info' : step === 2 ? 'Vehicle' : 'Documents'}
+                    Step {step} of 2: {step === 1 ? 'Personal Info' : 'Vehicle'}
                 </div>
 
                 {error && <p className="auth-error" style={{ marginBottom: 16 }}>{error}</p>}
 
                 {/* Form Container */}
-                <form onSubmit={step === 3 ? handleSubmit : (e) => { e.preventDefault(); nextStep(); }}>
+                <form onSubmit={step === 2 ? handleSubmit : (e) => { e.preventDefault(); nextStep(); }}>
 
                     {/* STEP 1: Personal Info */}
                     {step === 1 && (
@@ -193,33 +176,6 @@ export default function RiderSignup() {
                         </div>
                     )}
 
-                    {/* STEP 3: Documents */}
-                    {step === 3 && (
-                        <div className="form-group-list docs-grid">
-                            <p className="auth-sub" style={{ marginBottom: 12 }}>Upload clear photos for verification.</p>
-
-                            {[
-                                { label: 'Profile Photo', name: 'profilePic' },
-                                { label: 'Aadhaar Card', name: 'aadhaarDoc' },
-                                { label: 'Driving License', name: 'licenseDoc' },
-                                { label: 'Vehicle Photo', name: 'vehiclePic' },
-                                { label: 'RC Book', name: 'rcBookDoc' },
-                            ].map((doc) => (
-                                <div className="form-group" key={doc.name}>
-                                    <label className="form-label">{doc.label} *</label>
-                                    <label className={`file-upload-btn ${form[doc.name] ? 'uploaded' : ''}`}>
-                                        <input type="file" name={doc.name} accept="image/*,.pdf" onChange={handleFileChange} hidden />
-                                        {form[doc.name] ? (
-                                            <><CheckCircle size={16} /> {form[doc.name]}</>
-                                        ) : (
-                                            <><Upload size={16} /> Tap to upload</>
-                                        )}
-                                    </label>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-
                     <div className="divider" style={{ margin: '24px 0 16px' }} />
 
                     {/* Navigation Buttons */}
@@ -230,7 +186,7 @@ export default function RiderSignup() {
                             </button>
                         )}
 
-                        {step < 3 ? (
+                        {step < 2 ? (
                             <button type="submit" className="btn btn-primary" style={{ flex: 2, justifyContent: 'center' }}>
                                 Continue <ArrowRight size={16} />
                             </button>
