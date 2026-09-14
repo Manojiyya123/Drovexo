@@ -22,18 +22,19 @@ const formatTimestamp = (date, hr, min) => {
 }
 
 const MOCK_ORDERS = [
-    { id: 'ORD-010', timestamp: formatTimestamp(today, 16, 45), customer: 'Rahul K', rider: 'Vikram S', price: 90, status: 'in_progress', pickup: '44 IT Park Rd', delivery: '10 Beach Ave', distance: 9 },
-    { id: 'ORD-009', timestamp: formatTimestamp(today, 15, 30), customer: 'Sneha L', rider: 'Arjun P', price: 50, status: 'pending', pickup: 'Sector 4, Market', delivery: 'Blue Towers', distance: 5 },
-    { id: 'ORD-008', timestamp: formatTimestamp(today, 14, 25), customer: 'Gaurav M', rider: '—', price: 40, status: 'canceled', pickup: 'City Mall', delivery: 'West End', distance: 4 },
-    { id: 'ORD-007', timestamp: formatTimestamp(today, 12, 10), customer: 'Priya D', rider: 'Vikram S', price: 120, status: 'accepted', pickup: 'Airport Road', delivery: 'Hotel Taj', distance: 12 },
-    { id: 'ORD-006', timestamp: formatTimestamp(today, 9, 15), customer: 'Amit B', rider: 'Arjun P', price: 30, status: 'delivered', pickup: 'Grocery Hub', delivery: 'Alpha Society', distance: 3 },
-    { id: 'ORD-005', timestamp: formatTimestamp(yesterday, 19, 45), customer: 'Rishi T', rider: 'Vikram S', price: 60, status: 'delivered', pickup: 'Metro Station', delivery: 'Sunrise Apt', distance: 6 },
-    { id: 'ORD-004', timestamp: formatTimestamp(yesterday, 18, 20), customer: 'Anjali V', rider: 'Manoj D', price: 70, status: 'delivered', pickup: 'Tech City', delivery: 'Hill View', distance: 7 },
-    { id: 'ORD-003', timestamp: formatTimestamp(yesterday, 16, 10), customer: 'Karan J', rider: 'Vikram S', price: 110, status: 'delivered', pickup: 'Warehouse B', delivery: 'Downtown', distance: 11 },
+    { id: 'ORD-010', timestamp: formatTimestamp(today, 16, 45), customer: 'Rahul K', rider: 'Vikram S', price: 90, status: 'in_progress', pickup: '44 IT Park Rd', delivery: '10 Beach Ave', distance: 9, dropType: 'person' },
+    { id: 'ORD-009', timestamp: formatTimestamp(today, 15, 30), customer: 'Sneha L', rider: 'Arjun P', price: 50, status: 'pending', pickup: 'Sector 4, Market', delivery: 'Blue Towers', distance: 5, dropType: 'parcel' },
+    { id: 'ORD-008', timestamp: formatTimestamp(today, 14, 25), customer: 'Gaurav M', rider: '—', price: 40, status: 'canceled', pickup: 'City Mall', delivery: 'West End', distance: 4, dropType: 'parcel' },
+    { id: 'ORD-007', timestamp: formatTimestamp(today, 12, 10), customer: 'Priya D', rider: 'Vikram S', price: 120, status: 'accepted', pickup: 'Airport Road', delivery: 'Hotel Taj', distance: 12, dropType: 'person' },
+    { id: 'ORD-006', timestamp: formatTimestamp(today, 9, 15), customer: 'Amit B', rider: 'Arjun P', price: 30, status: 'delivered', pickup: 'Grocery Hub', delivery: 'Alpha Society', distance: 3, dropType: 'parcel' },
+    { id: 'ORD-005', timestamp: formatTimestamp(yesterday, 19, 45), customer: 'Rishi T', rider: 'Vikram S', price: 60, status: 'delivered', pickup: 'Metro Station', delivery: 'Sunrise Apt', distance: 6, dropType: 'person' },
+    { id: 'ORD-004', timestamp: formatTimestamp(yesterday, 18, 20), customer: 'Anjali V', rider: 'Manoj D', price: 70, status: 'delivered', pickup: 'Tech City', delivery: 'Hill View', distance: 7, dropType: 'parcel' },
+    { id: 'ORD-003', timestamp: formatTimestamp(yesterday, 16, 10), customer: 'Karan J', rider: 'Vikram S', price: 110, status: 'delivered', pickup: 'Warehouse B', delivery: 'Downtown', distance: 11, dropType: 'person' },
 ];
 
 export default function AdminOrders() {
     const [statusFilter, setStatusFilter] = useState('all');
+    const [dropTypeFilter, setDropTypeFilter] = useState('all');
     const [dateFilterType, setDateFilterType] = useState('today');
     const [dateRange, setDateRange] = useState({ start: '', end: '' });
     const [expandedRow, setExpandedRow] = useState(null);
@@ -55,6 +56,9 @@ export default function AdminOrders() {
             if (dateRange.start && orderDateStr < dateRange.start) return false;
             if (dateRange.end && orderDateStr > dateRange.end) return false;
         }
+
+        if (dropTypeFilter !== 'all' && o.dropType !== dropTypeFilter) return false;
+
         return true;
     });
 
@@ -173,7 +177,19 @@ export default function AdminOrders() {
                     </div>
                 </div>
 
-                <div className="form-group" style={{ flex: 1, minWidth: '200px', margin: 0 }}>
+                <div className="form-group" style={{ flex: 1, minWidth: '150px', margin: 0 }}>
+                    <label className="form-label" style={{ fontSize: '11px', textTransform: 'uppercase', color: 'var(--text-muted)' }}>Drop Type Filter</label>
+                    <div className="select-wrap">
+                        <select className="form-input" value={dropTypeFilter} onChange={e => setDropTypeFilter(e.target.value)}>
+                            <option value="all">All Drops</option>
+                            <option value="person">Person Drops</option>
+                            <option value="parcel">Parcel Drops</option>
+                        </select>
+                        <ChevronDown className="select-icon" size={16} />
+                    </div>
+                </div>
+
+                <div className="form-group" style={{ flex: 1, minWidth: '150px', margin: 0 }}>
                     <label className="form-label" style={{ fontSize: '11px', textTransform: 'uppercase', color: 'var(--text-muted)' }}>Date Filter</label>
                     <div className="select-wrap">
                         <select className="form-input" value={dateFilterType} onChange={e => setDateFilterType(e.target.value)}>
