@@ -1,14 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Home from './pages/Home';
-import Auth from './pages/Auth';
-import Signup from './pages/Signup';
-import RiderSignup from './pages/RiderSignup';
-import CustomerDashboard from './pages/customer/Dashboard';
-import CreateOrder from './pages/customer/CreateOrder';
-import OrderHistory from './pages/customer/OrderHistory';
-import RiderDashboard from './pages/rider/Dashboard';
-import RiderMyDrops from './pages/rider/MyDrops';
-import RiderEarnings from './pages/rider/Earnings';
+import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/admin/Dashboard';
 import AdminOrders from './pages/admin/Orders';
 import AdminCustomers from './pages/admin/Customers';
@@ -22,21 +13,9 @@ function App() {
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL}>
       <Routes>
-        {/* Public */}
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Auth />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/rider-signup" element={<RiderSignup />} />
-
-        {/* Customer */}
-        <Route path="/customer" element={<CustomerDashboard />} />
-        <Route path="/customer/order/new" element={<CreateOrder />} />
-        <Route path="/customer/orders" element={<OrderHistory />} />
-
-        {/* Rider */}
-        <Route path="/rider" element={<RiderDashboard />} />
-        <Route path="/rider/drops" element={<RiderMyDrops />} />
-        <Route path="/rider/earnings" element={<RiderEarnings />} />
+        {/* Core Logic */}
+        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/login" element={<AdminLogin />} />
 
         {/* Admin Flow */}
         <Route path="/admin" element={<AdminDashboard />} />
@@ -50,7 +29,7 @@ function App() {
         <Route path="/admin/customer-parcels/:customerName" element={<AdminCustomerParcels />} />
 
         {/* Fallback */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<Navigate to="/admin" replace />} />
       </Routes>
     </BrowserRouter>
   );
