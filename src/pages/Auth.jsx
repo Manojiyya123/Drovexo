@@ -7,7 +7,6 @@ import './Auth.css';
 const DEMO_USERS = {
     'customer@demo.com': { password: 'demo123', role: 'customer', name: 'Arun Kumar' },
     'rider@demo.com': { password: 'demo123', role: 'rider', name: 'Vikram Singh' },
-    'admin@demo.com': { password: 'demo123', role: 'admin', name: 'Admin' },
 };
 
 export default function Auth() {
