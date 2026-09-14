@@ -22,8 +22,6 @@ export default function Auth() {
         setLoading(true);
 
         try {
-            import { hashPassword } from '../utils/hash';
-
             const hashedPassword = await hashPassword(password);
 
             // 1. Determine Role (Check riders table first)
