@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, ArrowLeft } from 'lucide-react';
 import { supabase } from '../services/supabase';
+import { hashPassword } from '../utils/hash';
 import './Auth.css';
 import './Signup.css';
 
@@ -66,15 +67,11 @@ export default function RiderSignup() {
         setLoading(true);
 
         try {
-            // 1. Securely register the user via Supabase Auth
-            const { data: authData, error: authError } = await supabase.auth.signUp({
-                email: form.email,
-                password: form.password,
-            });
+            import { hashPassword } from '../utils/hash';
 
-            if (authError) throw authError;
+            const hashedPassword = await hashPassword(form.password);
 
-            // 2. Insert public profile metadata into riders table
+            // 1. Direct table insert bypassing Supabase Auth
             const { error: dbError } = await supabase.from('riders').insert({
                 rider_id: form.riderId,
                 first_name: form.firstName,
@@ -82,6 +79,7 @@ export default function RiderSignup() {
                 gender: form.gender,
                 mobile_no: form.phone,
                 email_id: form.email,
+                password: hashedPassword,
                 vehicle_type: form.vehicleType,
                 vehicle_model: form.vehicleModel,
                 vehicle_registration_number: form.vehicleNumber,
@@ -92,7 +90,7 @@ export default function RiderSignup() {
 
             if (dbError) {
                 console.error("Rider Profile creation error:", dbError);
-                throw new Error("Failed to create rider profile. Unique IDs may already be taken.");
+                throw new Error(dbError.message || "Failed to create rider profile.");
             }
 
             // Successfully created

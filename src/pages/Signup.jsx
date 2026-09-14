@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { User, Users, Phone, Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { supabase } from '../services/supabase';
+import { hashPassword } from '../utils/hash';
 import './Auth.css';
 import './Signup.css';
 
@@ -41,28 +42,25 @@ export default function Signup() {
         setLoading(true);
 
         try {
-            // 1. Securely register the user via Supabase Auth
-            const { data: authData, error: authError } = await supabase.auth.signUp({
-                email: form.email,
-                password: form.password,
-            });
+            import { hashPassword } from '../utils/hash';
 
-            if (authError) throw authError;
+            const hashedPassword = await hashPassword(form.password);
 
-            // 2. Insert public profile metadata into customers table
+            // 1. Direct table insert bypassing Supabase Auth
             const { error: dbError } = await supabase.from('customers').insert({
                 email: form.email,
                 first_name: form.firstName,
                 last_name: form.lastName,
                 gender: form.gender,
                 phone_no: form.mobile,
+                password: hashedPassword
             });
 
             if (dbError) {
-                // If profile fails, ideally we'd delete the auth user, but for now just surface the error
                 console.error("Profile creation error:", dbError);
-                throw new Error("Failed to create customer profile. Phone number might be already registered.");
+                throw new Error(dbError.message || "Failed to create customer profile.");
             }
+
 
             // Successfully created.
             // In a real app we'd rely on Supabase session for routing, but here we redirect.

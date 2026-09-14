@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { Mail, Lock, ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { supabase } from '../services/supabase';
+import { hashPassword } from '../utils/hash';
 import './Auth.css';
 
 export default function Auth() {
@@ -21,22 +22,21 @@ export default function Auth() {
         setLoading(true);
 
         try {
-            // 1. Authenticate with Supabase
-            const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-                email,
-                password,
-            });
+            import { hashPassword } from '../utils/hash';
 
-            if (authError) throw authError;
+            const hashedPassword = await hashPassword(password);
 
-            // 2. Determine Role (Check riders table first)
+            // 1. Determine Role (Check riders table first)
             const { data: riderData } = await supabase
                 .from('riders')
-                .select('rider_id, first_name, last_name, status')
+                .select('rider_id, first_name, last_name, status, password')
                 .eq('email_id', email)
-                .single();
+                .maybeSingle();
 
             if (riderData) {
+                if (riderData.password !== hashedPassword) {
+                    throw new Error("Invalid password.");
+                }
                 if (riderData.status !== 'approved') {
                     throw new Error(`Your rider account is currently: ${riderData.status}. You cannot login yet.`);
                 }
@@ -49,14 +49,17 @@ export default function Auth() {
                 return;
             }
 
-            // 3. Not a rider? Check customers table
+            // 2. Not a rider? Check customers table
             const { data: customerData } = await supabase
                 .from('customers')
-                .select('first_name, last_name')
+                .select('first_name, last_name, password')
                 .eq('email', email)
-                .single();
+                .maybeSingle();
 
             if (customerData) {
+                if (customerData.password !== hashedPassword) {
+                    throw new Error("Invalid password.");
+                }
                 localStorage.setItem('drovexo_user', JSON.stringify({
                     email,
                     role: 'customer',
@@ -64,7 +67,7 @@ export default function Auth() {
                 }));
                 navigate('/customer');
             } else {
-                throw new Error("No customer or rider profile found for this authenticated email. Please contact support.");
+                throw new Error("No account found for this email. Please sign up.");
             }
 
         } catch (err) {
