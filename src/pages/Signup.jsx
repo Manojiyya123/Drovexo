@@ -42,8 +42,6 @@ export default function Signup() {
         setLoading(true);
 
         try {
-            import { hashPassword } from '../utils/hash';
-
             const hashedPassword = await hashPassword(form.password);
 
             // 1. Direct table insert bypassing Supabase Auth
