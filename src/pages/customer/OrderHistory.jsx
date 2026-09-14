@@ -5,23 +5,23 @@ import { User, Phone, MapPin, Calendar, CheckCircle, Clock, XCircle } from 'luci
 const INITIAL_ORDERS = [
     {
         id: 'ORD-001', pickup: '123 Market St', delivery: '456 Rose Ave', distance: 4, price: 40, status: 'delivered',
-        createdAt: '2026-08-28 10:30 AM', acceptedAt: '2026-08-28 10:35 AM', riderName: 'Vikram Singh', riderPhone: '9876543210'
+        createdAt: '2026-08-28 10:30 AM', acceptedAt: '2026-08-28 10:35 AM', riderName: 'Vikram Singh', riderPhone: '9876543210', dropType: 'parcel'
     },
     {
         id: 'ORD-002', pickup: '78 Park Road', delivery: '22 Lake View', distance: 7, price: 70, status: 'accepted',
-        createdAt: '2026-08-29 02:15 PM', acceptedAt: '2026-08-29 02:20 PM', riderName: 'Rahul Kumar', riderPhone: '9123456789'
+        createdAt: '2026-08-29 02:15 PM', acceptedAt: '2026-08-29 02:20 PM', riderName: 'Rahul Kumar', riderPhone: '9123456789', dropType: 'person'
     },
     {
         id: 'ORD-003', pickup: '11 Temple Lane', delivery: '88 Bridge St', distance: 2, price: 20, status: 'in_progress',
-        createdAt: '2026-08-29 04:00 PM', acceptedAt: null, riderName: null, riderPhone: null
+        createdAt: '2026-08-29 04:00 PM', acceptedAt: null, riderName: null, riderPhone: null, dropType: 'parcel'
     },
     {
         id: 'ORD-004', pickup: '45 Sunset Blvd', delivery: '102 Main St', distance: 5, price: 50, status: 'pending',
-        createdAt: '2026-08-29 03:00 PM', acceptedAt: '2026-08-29 03:05 PM', riderName: 'Suresh Menon', riderPhone: '9988776655'
+        createdAt: '2026-08-29 03:00 PM', acceptedAt: '2026-08-29 03:05 PM', riderName: 'Suresh Menon', riderPhone: '9988776655', dropType: 'parcel'
     },
     {
         id: 'ORD-005', pickup: '99 North St', delivery: '11 South St', distance: 3, price: 30, status: 'canceled',
-        createdAt: '2026-08-29 01:00 PM', acceptedAt: null, riderName: null, riderPhone: null
+        createdAt: '2026-08-29 01:00 PM', acceptedAt: null, riderName: null, riderPhone: null, dropType: 'person'
     }
 ];
 
@@ -35,6 +35,7 @@ const STATUS_MAP = {
 
 export default function OrderHistory() {
     const [orders, setOrders] = useState(INITIAL_ORDERS);
+    const [dropTypeFilter, setDropTypeFilter] = useState('all');
 
     const handleCancel = (id) => {
         if (window.confirm('Are you sure you want to cancel this order?')) {
@@ -42,10 +43,24 @@ export default function OrderHistory() {
         }
     };
 
+    const filteredOrders = orders.filter(o => dropTypeFilter === 'all' || o.dropType === dropTypeFilter);
+
     return (
         <MobileLayout role="customer" title="My Orders" subtitle="All deliveries">
+            <div style={{ padding: '0 16px 16px', display: 'flex', gap: '12px' }}>
+                <select
+                    className="form-input"
+                    value={dropTypeFilter}
+                    onChange={e => setDropTypeFilter(e.target.value)}
+                    style={{ margin: 0 }}
+                >
+                    <option value="all">All Drops</option>
+                    <option value="parcel">Parcel Drops</option>
+                    <option value="person">Person Drops</option>
+                </select>
+            </div>
             <div className="orders-list">
-                {orders.map(o => (
+                {filteredOrders.map(o => (
                     <div key={o.id} className="order-row card" style={{ padding: '16px', gap: '12px', display: 'flex', flexDirection: 'column' }}>
                         {/* Header: ID and Status */}
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>

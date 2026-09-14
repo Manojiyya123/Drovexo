@@ -13,16 +13,16 @@ const INITIAL_DROPS = [
     {
         id: 'ORD-004', pickup: '45 Sunset Blvd', delivery: '102 Main St', distance: 5, price: 50,
         status: 'pending', customerName: 'Suresh Menon', fatherName: 'Ashok Menon', customerPhone: '9988776655',
-        receiverName: 'Rahul Kumar', receiverPhone: '9123456789'
+        receiverName: 'Rahul Kumar', receiverPhone: '9123456789', dropType: 'parcel'
     },
     {
         id: 'ORD-002', pickup: '78 Park Road', delivery: '22 Lake View', distance: 7, price: 70,
         status: 'accepted', customerName: 'Anita Desai', fatherName: 'Karan Desai', customerPhone: '9555566666',
-        receiverName: 'Salman Khan', receiverPhone: '9000033333'
+        receiverName: 'Salman Khan', receiverPhone: '9000033333', dropType: 'person'
     },
     {
         id: 'ORD-001', pickup: '123 Market St', delivery: '456 Rose Ave', distance: 4, price: 40, status: 'delivered',
-        date: '2026-08-28'
+        date: '2026-08-28', dropType: 'parcel'
     },
 ];
 
@@ -31,9 +31,13 @@ export default function MyDrops() {
     const [drops, setDrops] = useState(INITIAL_DROPS);
     const [collectAmount, setCollectAmount] = useState({});
     const [verifiedDistances, setVerifiedDistances] = useState({});
+    const [dropTypeFilter, setDropTypeFilter] = useState('all');
+
+    // Filter drops first
+    const filteredDrops = drops.filter(o => dropTypeFilter === 'all' || o.dropType === dropTypeFilter);
 
     // Sort: Pending -> Accepted -> Delivered
-    const sorted = [...drops].sort((a, b) => {
+    const sorted = [...filteredDrops].sort((a, b) => {
         const order = { 'pending': 1, 'accepted': 2, 'delivered': 3 };
         return order[a.status] - order[b.status];
     });
@@ -72,6 +76,18 @@ export default function MyDrops() {
 
     return (
         <MobileLayout role="rider" title="My Drops" subtitle="Your delivery processing">
+            <div style={{ padding: '0 16px 16px', display: 'flex', gap: '12px' }}>
+                <select
+                    className="form-input"
+                    value={dropTypeFilter}
+                    onChange={e => setDropTypeFilter(e.target.value)}
+                    style={{ margin: 0 }}
+                >
+                    <option value="all">All Drops</option>
+                    <option value="parcel">Parcel Drops</option>
+                    <option value="person">Person Drops</option>
+                </select>
+            </div>
             <div className="section-block">
                 <div className="orders-list">
                     {sorted.map(o => (
