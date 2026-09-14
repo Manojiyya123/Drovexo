@@ -12,20 +12,21 @@ export default function RiderSignup() {
 
     // 16 Fields Total
     const [form, setForm] = useState({
-        // Step 1: Personal (8)
+        // Step 1: Personal (7)
         firstName: '',
         lastName: '',
-        fatherName: '',
         gender: 'Male',
         email: '',
         phone: '',
         password: '',
         riderId: '',
         address: '',
-        // Step 2: Vehicle (3)
+        // Step 2: Vehicle & Verification (5)
         vehicleType: '2-wheeler',
         vehicleModel: '',
         vehicleNumber: '',
+        adharNo: '',
+        licenseNo: '',
     });
 
     function handleChange(e) {
@@ -55,8 +56,8 @@ export default function RiderSignup() {
         setError('');
 
         if (step === 2) {
-            if (!form.vehicleModel || !form.vehicleNumber) {
-                setError('Please fill in all vehicle details before submitting.');
+            if (!form.vehicleModel || !form.vehicleNumber || !form.adharNo || !form.licenseNo) {
+                setError('Please fill in all vehicle and verification details before submitting.');
                 return;
             }
         }
@@ -89,7 +90,7 @@ export default function RiderSignup() {
 
                 <h1 className="auth-title">Rider Application</h1>
                 <div className="step-indicator">
-                    Step {step} of 2: {step === 1 ? 'Personal Info' : 'Vehicle'}
+                    Step {step} of 2: {step === 1 ? 'Personal Info' : 'Vehicle & IDs'}
                 </div>
 
                 {error && <p className="auth-error" style={{ marginBottom: 16 }}>{error}</p>}
@@ -111,19 +112,13 @@ export default function RiderSignup() {
                                 </div>
                             </div>
 
-                            <div className="signup-row">
-                                <div className="form-group">
-                                    <label className="form-label">Father's Name</label>
-                                    <input name="fatherName" className="form-input" value={form.fatherName} onChange={handleChange} />
-                                </div>
-                                <div className="form-group">
-                                    <label className="form-label">Gender</label>
-                                    <select name="gender" className="form-input" value={form.gender} onChange={handleChange}>
-                                        <option value="Male">Male</option>
-                                        <option value="Female">Female</option>
-                                        <option value="Other">Other</option>
-                                    </select>
-                                </div>
+                            <div className="form-group">
+                                <label className="form-label">Gender</label>
+                                <select name="gender" className="form-input" value={form.gender} onChange={handleChange}>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
                             </div>
 
                             <div className="form-group">
@@ -160,7 +155,7 @@ export default function RiderSignup() {
                                 <label className="form-label">Vehicle Type *</label>
                                 <select name="vehicleType" className="form-input" value={form.vehicleType} onChange={handleChange}>
                                     <option value="2-wheeler">2-Wheeler (Bike/Scooter)</option>
-                                    <option value="4-wheeler">4-Wheeler (Car/Van)</option>
+                                    <option value="3-wheeler">3-Wheeler (Auto/Rickshaw)</option>
                                 </select>
                             </div>
 
@@ -172,6 +167,16 @@ export default function RiderSignup() {
                             <div className="form-group">
                                 <label className="form-label">Vehicle Registration Number *</label>
                                 <input name="vehicleNumber" className="form-input" placeholder="e.g. MH 12 AB 1234" value={form.vehicleNumber} onChange={handleChange} style={{ textTransform: 'uppercase' }} required />
+                            </div>
+
+                            <div className="form-group">
+                                <label className="form-label">Aadhaar Number *</label>
+                                <input name="adharNo" className="form-input" placeholder="12-digit Aadhaar" value={form.adharNo} onChange={handleChange} required />
+                            </div>
+
+                            <div className="form-group">
+                                <label className="form-label">Driving License Number *</label>
+                                <input name="licenseNo" className="form-input" placeholder="DL Number" value={form.licenseNo} onChange={handleChange} required />
                             </div>
                         </div>
                     )}

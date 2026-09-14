@@ -7,8 +7,8 @@ import './Signup.css';
 export default function Signup() {
     const navigate = useNavigate();
     const [form, setForm] = useState({
-        name: '',
-        fatherName: '',
+        firstName: '',
+        lastName: '',
         gender: 'Male',
         mobile: '',
         email: '',
@@ -45,7 +45,7 @@ export default function Signup() {
 
         // For now: store in localStorage and redirect
         localStorage.setItem('drovexo_user', JSON.stringify({
-            name: form.name,
+            name: `${form.firstName} ${form.lastName}`,
             email: form.email,
             role: 'customer',
         }));
@@ -72,16 +72,16 @@ export default function Signup() {
                     {/* Name */}
                     <div className="signup-row">
                         <div className="form-group">
-                            <label className="form-label" htmlFor="name">
+                            <label className="form-label" htmlFor="firstName">
                                 <User size={12} style={{ verticalAlign: 'middle', marginRight: 4 }} />
-                                Full Name
+                                First Name
                             </label>
                             <input
-                                id="name"
-                                name="name"
+                                id="firstName"
+                                name="firstName"
                                 className="form-input"
-                                placeholder="Your full name"
-                                value={form.name}
+                                placeholder="Your first name"
+                                value={form.firstName}
                                 onChange={handleChange}
                                 required
                                 autoComplete="given-name"
@@ -89,18 +89,19 @@ export default function Signup() {
                         </div>
 
                         <div className="form-group">
-                            <label className="form-label" htmlFor="fatherName">
+                            <label className="form-label" htmlFor="lastName">
                                 <Users size={12} style={{ verticalAlign: 'middle', marginRight: 4 }} />
-                                Father's Name
+                                Last Name
                             </label>
                             <input
-                                id="fatherName"
-                                name="fatherName"
+                                id="lastName"
+                                name="lastName"
                                 className="form-input"
-                                placeholder="Father's name"
-                                value={form.fatherName}
+                                placeholder="Your last name"
+                                value={form.lastName}
                                 onChange={handleChange}
                                 required
+                                autoComplete="family-name"
                             />
                         </div>
                     </div>
