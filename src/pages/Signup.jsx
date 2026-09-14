@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { User, Users, Phone, Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
+import { supabase } from '../services/supabase';
 import './Auth.css';
 import './Signup.css';
 
@@ -38,19 +39,40 @@ export default function Signup() {
         }
 
         setLoading(true);
-        await new Promise(r => setTimeout(r, 800)); // simulate API
 
-        // TODO: Insert into Supabase profiles table when keys are configured
-        // supabase.auth.signUp({ email, password }) then insert profile
+        try {
+            // 1. Securely register the user via Supabase Auth
+            const { data: authData, error: authError } = await supabase.auth.signUp({
+                email: form.email,
+                password: form.password,
+            });
 
-        // For now: store in localStorage and redirect
-        localStorage.setItem('drovexo_user', JSON.stringify({
-            name: `${form.firstName} ${form.lastName}`,
-            email: form.email,
-            role: 'customer',
-        }));
+            if (authError) throw authError;
 
-        navigate('/customer');
+            // 2. Insert public profile metadata into customers table
+            const { error: dbError } = await supabase.from('customers').insert({
+                email: form.email,
+                first_name: form.firstName,
+                last_name: form.lastName,
+                gender: form.gender,
+                phone_no: form.mobile,
+            });
+
+            if (dbError) {
+                // If profile fails, ideally we'd delete the auth user, but for now just surface the error
+                console.error("Profile creation error:", dbError);
+                throw new Error("Failed to create customer profile. Phone number might be already registered.");
+            }
+
+            // Successfully created.
+            // In a real app we'd rely on Supabase session for routing, but here we redirect.
+            alert("Account created successfully!");
+            navigate('/login');
+        } catch (err) {
+            setError(err.message || "An error occurred during signup.");
+        } finally {
+            setLoading(false);
+        }
     }
 
     return (

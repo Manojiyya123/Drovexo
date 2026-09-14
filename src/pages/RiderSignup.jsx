@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, ArrowLeft, Upload, CheckCircle } from 'lucide-react';
+import { ArrowRight, ArrowLeft } from 'lucide-react';
+import { supabase } from '../services/supabase';
 import './Auth.css';
 import './Signup.css';
 
@@ -63,17 +64,45 @@ export default function RiderSignup() {
         }
 
         setLoading(true);
-        await new Promise(r => setTimeout(r, 1200)); // Simulating upload & signup
 
-        alert('Rider application submitted successfully! Welcome to the team.');
+        try {
+            // 1. Securely register the user via Supabase Auth
+            const { data: authData, error: authError } = await supabase.auth.signUp({
+                email: form.email,
+                password: form.password,
+            });
 
-        // Auto-login as rider for demo purposes
-        localStorage.setItem('drovexo_user', JSON.stringify({
-            name: `${form.firstName} ${form.lastName}`,
-            email: form.email,
-            role: 'rider',
-        }));
-        navigate('/rider');
+            if (authError) throw authError;
+
+            // 2. Insert public profile metadata into riders table
+            const { error: dbError } = await supabase.from('riders').insert({
+                rider_id: form.riderId,
+                first_name: form.firstName,
+                last_name: form.lastName,
+                gender: form.gender,
+                mobile_no: form.phone,
+                email_id: form.email,
+                vehicle_type: form.vehicleType,
+                vehicle_model: form.vehicleModel,
+                vehicle_registration_number: form.vehicleNumber,
+                adhar_no: form.adharNo,
+                license_no: form.licenseNo,
+                // Status defaults to 'pending' from schema!
+            });
+
+            if (dbError) {
+                console.error("Rider Profile creation error:", dbError);
+                throw new Error("Failed to create rider profile. Unique IDs may already be taken.");
+            }
+
+            // Successfully created
+            alert('Rider application submitted successfully! Welcome to the team.');
+            navigate('/login');
+        } catch (err) {
+            setError(err.message || "An error occurred during rider signup.");
+        } finally {
+            setLoading(false);
+        }
     }
 
     return (

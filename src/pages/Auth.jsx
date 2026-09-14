@@ -1,21 +1,16 @@
 import { useState } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { Mail, Lock, ArrowRight, Eye, EyeOff } from 'lucide-react';
+import { supabase } from '../services/supabase';
 import './Auth.css';
-
-// Demo users — replace with real Supabase auth when keys are configured
-const DEMO_USERS = {
-    'customer@demo.com': { password: 'demo123', role: 'customer', name: 'Arun Kumar' },
-    'rider@demo.com': { password: 'demo123', role: 'rider', name: 'Vikram Singh' },
-};
 
 export default function Auth() {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const defaultRole = searchParams.get('role') || 'customer';
 
-    const [email, setEmail] = useState(`${defaultRole}@demo.com`);
-    const [password, setPassword] = useState('demo123');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [showPw, setShowPw] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -25,18 +20,58 @@ export default function Auth() {
         setError('');
         setLoading(true);
 
-        await new Promise(r => setTimeout(r, 600)); // simulate network
+        try {
+            // 1. Authenticate with Supabase
+            const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+                email,
+                password,
+            });
 
-        const user = DEMO_USERS[email.toLowerCase()];
-        if (!user || user.password !== password) {
-            setError('Invalid email or password.');
+            if (authError) throw authError;
+
+            // 2. Determine Role (Check riders table first)
+            const { data: riderData } = await supabase
+                .from('riders')
+                .select('rider_id, first_name, last_name, status')
+                .eq('email_id', email)
+                .single();
+
+            if (riderData) {
+                if (riderData.status !== 'approved') {
+                    throw new Error(`Your rider account is currently: ${riderData.status}. You cannot login yet.`);
+                }
+                localStorage.setItem('drovexo_user', JSON.stringify({
+                    email,
+                    role: 'rider',
+                    name: `${riderData.first_name} ${riderData.last_name || ''}`.trim()
+                }));
+                navigate('/rider');
+                return;
+            }
+
+            // 3. Not a rider? Check customers table
+            const { data: customerData } = await supabase
+                .from('customers')
+                .select('first_name, last_name')
+                .eq('email', email)
+                .single();
+
+            if (customerData) {
+                localStorage.setItem('drovexo_user', JSON.stringify({
+                    email,
+                    role: 'customer',
+                    name: `${customerData.first_name} ${customerData.last_name || ''}`.trim()
+                }));
+                navigate('/customer');
+            } else {
+                throw new Error("No customer or rider profile found for this authenticated email. Please contact support.");
+            }
+
+        } catch (err) {
+            setError(err.message || "Invalid email or password.");
+        } finally {
             setLoading(false);
-            return;
         }
-
-        // Store session in localStorage (replace with Supabase session)
-        localStorage.setItem('drovexo_user', JSON.stringify({ email, role: user.role, name: user.name }));
-        navigate(`/${user.role}`);
     }
 
     return (
@@ -56,22 +91,7 @@ export default function Auth() {
                 <h1 className="auth-title">Welcome back</h1>
                 <p className="auth-sub">Sign in to your account to continue</p>
 
-                {/* Demo hint */}
-                <div className="auth-demo-box">
-                    <p className="auth-demo-label">Demo credentials</p>
-                    <div className="auth-demo-roles">
-                        {Object.entries(DEMO_USERS).map(([e, u]) => (
-                            <button
-                                key={e}
-                                type="button"
-                                className={`auth-demo-btn ${email === e ? 'active' : ''}`}
-                                onClick={() => { setEmail(e); setPassword(u.password); }}
-                            >
-                                {u.role}
-                            </button>
-                        ))}
-                    </div>
-                </div>
+                {/* Removed Demo Credentials for Security */}
 
                 <form className="auth-form" onSubmit={handleLogin}>
                     <div className="form-group">
